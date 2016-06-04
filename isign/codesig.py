@@ -126,7 +126,7 @@ class Codesig(object):
                 bundle_struct.data = self.signable.get_changed_bundle_id()
                 bundle_struct.length = len(bundle_struct.data)
             except Exception:
-                log.log("could not set bundle id")
+                log.info("could not set bundle id")
 
         try:
             cn = req_blob_0.data.expr.data[1].data[1].data[0].data[2].Data
