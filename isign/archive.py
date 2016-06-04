@@ -282,7 +282,8 @@ def resign(input_path,
             # Override info.plist props of the parent bundle
             bundle.update_info_props(info_props)
 
-        bundle.update_info_props(CFBundleIdentifier=getNewAppIDFromProfileEntitlements(provisioning_profile))
+        newBundleID = dict(CFBundleIdentifier=getNewAppIDFromProfileEntitlements(provisioning_profile))
+        bundle.update_info_props(newBundleID)
         process_watchkit(bundle.path, REMOVE_WATCHKIT)
         bundle.resign(signer, provisioning_profile)
         archive.__class__.archive(temp_dir, output_path)

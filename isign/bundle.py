@@ -219,7 +219,7 @@ class App(Bundle):
     def provision(self, provision_path):
         shutil.copyfile(provision_path, self.provision_path)
 
-    def create_entitlements(self, team_id):
+    def create_entitlements(self, provision_path):
         bundle_id = self.info['CFBundleIdentifier']
         provision_file = file(provision_path,'r')
         provision_content = provision_file.read()
@@ -235,5 +235,5 @@ class App(Bundle):
     def resign(self, signer, provisioning_profile):
         """ signs app in place """
         self.provision(provisioning_profile)
-        self.create_entitlements(signer.team_id)
+        self.create_entitlements(provisioning_profile)
         super(App, self).resign(signer)
