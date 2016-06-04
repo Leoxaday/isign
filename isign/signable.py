@@ -123,6 +123,7 @@ class Signable(object):
     def get_changed_bundle_id(self):
         # Return a bundle ID to assign if Info.plist's CFBundleIdentifier value was changed
         if self.bundle.info_prop_changed('CFBundleIdentifier'):
+            log.info("[ ] CFBundleIdentifier  %s" % self.bundle.get_info_prop('CFBundleIdentifier'))
             return self.bundle.get_info_prop('CFBundleIdentifier')
         else:
             return None

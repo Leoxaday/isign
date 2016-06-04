@@ -86,10 +86,12 @@ class Signer(object):
         self.signer_cert_file = signer_cert_file
         self.apple_cert_file = apple_cert_file
         team_id = self._get_team_id()
+        log.info("[ ] team_id  %s" % team_id)
         if team_id is None:
             raise Exception("Cert file does not contain Subject line"
                             "with Apple Organizational Unit (OU)")
         self.team_id = team_id
+        log.info("[ ] self.team_id  %s" % self.team_id)
         self.check_openssl_version()
 
     def check_openssl_version(self):

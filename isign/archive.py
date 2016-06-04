@@ -250,10 +250,10 @@ def getNewAppIDFromProfileEntitlements(provision_path):
         entitlements = getEntitlementsFromProfile(provision_path)
         teamID = entitlements['com.apple.developer.team-identifier']
         customTeamID = "%s." % teamID
-        log.info("[ ] customTeamID %s" % customTeamID)
+        log.info("[ ] current team id %s" % customTeamID)
         appIDString = entitlements['application-identifier']
         newAppID = appIDString.split(customTeamID, 1)[1]
-        log.info("[ ] customTeamID %s" % newAppID)
+        log.info("[ ] changing app id to %s" % newAppID)
 
         return newAppID
 
@@ -265,6 +265,7 @@ def resign(input_path,
            provisioning_profile,
            output_path,
            info_props=None):
+
     """ Unified interface to extract any kind of archive from
         a temporary file, resign it with these credentials,
         and create a similar archive for that resigned app """
