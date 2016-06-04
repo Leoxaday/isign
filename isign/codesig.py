@@ -105,7 +105,7 @@ class Codesig(object):
             # entitlements_data = macho_cs.Blob_.build(entitlements)
             # log.debug(hashlib.sha1(entitlements_data).hexdigest())
 
-    def getEntitlementsFromPlist():
+    def getEntitlementsFromPlist(self):
         
         provision_info = biplist.readPlist(self.signable.bundle.info_path)
         entitlements = provision_info['Entitlements']
@@ -113,7 +113,7 @@ class Codesig(object):
         return entitlements
         
 
-    def getNewAppIDFromPlistEntitlements():
+    def getNewAppIDFromPlistEntitlements(self):
 
         entitlements = getEntitlementsFromPlist()
         teamID = entitlements['com.apple.developer.team-identifier']
@@ -140,8 +140,9 @@ class Codesig(object):
         req_blob_0 = requirements.data.BlobIndex[0].blob
         req_blob_0_original_length = req_blob_0.length
 
-        log.info("[ ] req_blob_0.data.expr  %s" % req_blob_0.data.expr)
-        log.info("[ ] req_blob_0.data.expr.data[0]  %s" % req_blob_0.data.expr.data[0])
+        # log.info("[ ] req_blob_0.data.expr  %s" % req_blob_0.data.expr)
+        log.info("[ ] req_blob_0.data.expr.data[0]  %s" % req_blob_0.data.expr.data[1].data)
+        
         if self.getNewAppIDFromProfileEntitlements():
             # Set the bundle id if it changed
             try:
