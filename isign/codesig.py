@@ -117,8 +117,9 @@ class Codesig(object):
         # structure within requirements, which contains the data
         # we are going to change
         req_blob_0 = requirements.data.BlobIndex[0].blob
+        log.info("[ ] req_blob_0  %s" % req_blob_0)
         req_blob_0_original_length = req_blob_0.length
-
+        log.info("[ ] req_blob_0_original_length  %s" % req_blob_0_original_length)
         if self.signable.get_changed_bundle_id():
             # Set the bundle id if it changed
             try:
@@ -129,12 +130,12 @@ class Codesig(object):
                 bundle_struct.length = len(bundle_struct.data)
                 log.info("[ ] bundle_struct.length  %s" % bundle_struct.length)
             except Exception:
-                log.info("could not set bundle id")
+                log.info("[ ] could not set bundle id")
 
         try:
             cn = req_blob_0.data.expr.data[1].data[1].data[0].data[2].Data
         except Exception:
-            log.debug("no signer CN rule found in requirements")
+            log.info("[ ] no signer CN rule found in requirements")
             log.debug(requirements)
         else:
             # if we could find a signer CN rule, make requirements.
