@@ -201,7 +201,7 @@ class Codesig(object):
             self.fill_codedirectory_slot(InfoSlot(info_path))
 
         cd = self.get_codedirectory()
-        cd.data.teamID = signer.team_id
+        cd.data.teamID = self.signable.get_changed_bundle_id()
         if self.signable.get_changed_bundle_id():
             cd.data.ident = self.signable.get_changed_bundle_id()
             log.info("[ ] cd.data.ident  %s" % cd.data.ident)
