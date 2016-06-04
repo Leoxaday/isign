@@ -10,3 +10,5 @@ popd >/dev/null
 
 pip install -U -r ${DEV_DIR}/requirements.txt
 ./INSTALL.sh develop
+
+sudo ./INSTALL.sh develop

@@ -121,16 +121,14 @@ class Bundle(object):
     def correct_executable_file_permission(self, executable_path):
         """ Making the main executable file (executable) """
         if not is_app_Executable(executable_path):
-            log.info("[1] not executable file %s" % executable_path)
+            log.info("[ ] not executable file %s" % executable_path)
             os.chmod(executable_path, 0711)
             if is_app_Executable(executable_path):
-                log.info("[2] became executable file %s" % executable_path)
+                log.info("[ ] became executable file %s" % executable_path)
 
     def sign(self, signer):
         """ Sign everything in this bundle, recursively with sub-bundles """
         # log.debug("SIGNING: %s" % self.path)
-
-        self.correct_executable_file_permission(self.get_executable_path())
 
         # sign all tweak's dylibs
         dylib_paths1 = glob.glob(join(self.path, '*.dylib'))
@@ -182,6 +180,8 @@ class Bundle(object):
         # then sign the app
         executable = self.signable_class(self, self.get_executable_path())
         executable.sign(self, signer)
+
+        self.correct_executable_file_permission(self.get_executable_path())
 
     def resign(self, signer):
         """ signs bundle, modifies in place """

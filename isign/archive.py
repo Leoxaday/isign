@@ -250,8 +250,10 @@ def getNewAppIDFromProfileEntitlements(provision_path):
         entitlements = getEntitlementsFromProfile(provision_path)
         teamID = entitlements['com.apple.developer.team-identifier']
         customTeamID = "%s." % teamID
+        log.info("[ ] customTeamID %s" % customTeamID)
         appIDString = entitlements['application-identifier']
         newAppID = appIDString.split(customTeamID, 1)[1]
+        log.info("[ ] customTeamID %s" % newAppID)
 
         return newAppID
 
