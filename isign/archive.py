@@ -4,6 +4,7 @@
     and create an archive of the same type """
 
 import biplist
+import plistlib
 from bundle import App, Bundle, is_info_plist_native
 from exceptions import NotSignable, NotMatched
 from distutils import spawn

@@ -10,6 +10,7 @@
     See the Apple Developer Documentation "About Bundles" """
 
 import biplist
+import plistlib
 import code_resources
 from exceptions import NotMatched
 import copy
