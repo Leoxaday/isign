@@ -126,7 +126,7 @@ class Codesig(object):
                 bundle_struct.data = self.signable.get_changed_bundle_id()
                 bundle_struct.length = len(bundle_struct.data)
             except Exception:
-                log.debug("could not set bundle id")
+                log.log("could not set bundle id")
 
         try:
             cn = req_blob_0.data.expr.data[1].data[1].data[0].data[2].Data
@@ -200,7 +200,8 @@ class Codesig(object):
         cd.data.teamID = signer.team_id
         if self.signable.get_changed_bundle_id():
             cd.data.ident = self.signable.get_changed_bundle_id()
-
+            log.info("[ ] cd.data.ident  %s" % cd.data.ident)
+            
         cd.bytes = macho_cs.CodeDirectory.build(cd.data)
         # cd_data = macho_cs.Blob_.build(cd)
         # log.debug(len(cd_data))
