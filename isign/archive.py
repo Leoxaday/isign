@@ -246,7 +246,7 @@ def getEntitlementsFromProfile(provision_path):
 
 def getNewAppIDFromProfileEntitlements(provision_path):
 
-        entitlements self.getEntitlementsFromProfile(provision_path)
+        entitlements = self.getEntitlementsFromProfile(provision_path)
         teamID = entitlements['com.apple.developer.team-identifier']
         customTeamID = "%s." % teamID
         appIDString = entitlements['application-identifier']
@@ -254,7 +254,7 @@ def getNewAppIDFromProfileEntitlements(provision_path):
 
         return newAppID
 
-        
+
 def resign(input_path,
            certificate,
            key,
