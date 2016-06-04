@@ -208,7 +208,7 @@ class Codesig(object):
 
         cd.bytes = macho_cs.CodeDirectory.build(cd.data)
         cd_data = macho_cs.Blob_.build(cd)
-        log.info("[ ] {}".format(len(cd_data)))
+        log.info("[ ] {}".format(cd_data))
         # open("cdrip", "wb").write(cd_data)
         # log.debug("CDHash:" + hashlib.sha1(cd_data).hexdigest())
 
