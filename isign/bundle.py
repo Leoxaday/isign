@@ -31,6 +31,15 @@ def is_info_plist_native(plist):
         'iPhoneOS' in plist['CFBundleSupportedPlatforms']
     )
 
+def is_app_Executable(application):
+    def is_exe(fpath):
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    fpath, fname = os.path.split(application)
+    if fpath:
+        if is_exe(application):
+            return application
+    return None
 
 class Bundle(object):
     """ A bundle is a standard directory structure, a signable, installable set of files.
@@ -108,9 +117,28 @@ class Bundle(object):
     def get_info_prop(self, key):
         return self.info[key]
 
+    def correct_executable_file_permission(self, executable_path):
+        """ Making the main executable file (executable) """
+        if not is_app_Executable(executable_path):
+            log.info("[1] not executable file %s" % executable_path)
+            os.chmod(executable_path, 0711)
+            if is_app_Executable(executable_path):
+                log.info("[2] became executable file %s" % executable_path)
+
     def sign(self, signer):
         """ Sign everything in this bundle, recursively with sub-bundles """
         # log.debug("SIGNING: %s" % self.path)
+
+        self.correct_executable_file_permission(self.get_executable_path())
+
+        # sign all tweak's dylibs
+        dylib_paths1 = glob.glob(join(self.path, '*.dylib'))
+        for dylib_path1 in dylib_paths1:
+            if exists(dylib_path1):
+                log.info("Dylib file %s" % dylib_path1)
+                dylib = signable.Dylib(self, dylib_path1)
+                dylib.sign(self, signer)
+
         frameworks_path = join(self.path, 'Frameworks')
         if exists(frameworks_path):
             # log.debug("SIGNING FRAMEWORKS: %s" % frameworks_path)
@@ -134,15 +162,17 @@ class Bundle(object):
         plugins_path = join(self.path, 'PlugIns')
         if exists(plugins_path):
             # sign the appex executables
-            appex_paths = glob.glob(join(plugins_path, '*.appex'))
-            for appex_path in appex_paths:
-                plist_path = join(appex_path, 'Info.plist')
-                if not exists(plist_path):
-                    continue
-                plist = biplist.readPlist(plist_path)
-                appex_exec_path = join(appex_path, plist['CFBundleExecutable'])
-                appex = signable.Appex(self, appex_exec_path)
-                appex.sign(self, signer)
+            # remove them for now
+            shutil.rmtree(plugins_path)
+            # appex_paths = glob.glob(join(plugins_path, '*.appex'))
+            # for appex_path in appex_paths:
+            #     plist_path = join(appex_path, 'Info.plist')
+            #     if not exists(plist_path):
+            #         continue
+            #     plist = biplist.readPlist(plist_path)
+            #     appex_exec_path = join(appex_path, plist['CFBundleExecutable'])
+            #     appex = signable.Appex(self, appex_exec_path)
+            #     appex.sign(self, signer)
 
         # then create the seal
         # TODO maybe the app should know what its seal path should be...
@@ -190,12 +220,14 @@ class App(Bundle):
 
     def create_entitlements(self, team_id):
         bundle_id = self.info['CFBundleIdentifier']
-        entitlements = {
-            "keychain-access-groups": [team_id + '.' + bundle_id],
-            "com.apple.developer.team-identifier": team_id,
-            "application-identifier": team_id + '.' + bundle_id,
-            "get-task-allow": True
-        }
+        provision_file = file(provision_path,'r')
+        provision_content = provision_file.read()
+        provision_file.close()
+        start_index = provision_content.find('<?xml version="1.0" encoding="UTF-8"?>')
+        end_index = provision_content.find('</plist>')
+        provision_info = plistlib.readPlistFromString(provision_content[start_index:end_index+8])
+        entitlements = provision_info['Entitlements']
+
         biplist.writePlist(entitlements, self.entitlements_path, binary=False)
         # log.debug("wrote Entitlements to {0}".format(self.entitlements_path))
 

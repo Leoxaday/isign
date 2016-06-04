@@ -231,7 +231,30 @@ def process_watchkit(root_bundle_path, should_remove=False):
         else:
             raise NotSignable("Cannot yet sign WatchKit bundles")
 
+def getEntitlementsFromProfile(provision_path):
+        
+        provision_file = file(provision_path,'r')
+        provision_content = provision_file.read()
+        provision_file.close()
+        start_index = provision_content.find('<?xml version="1.0" encoding="UTF-8"?>')
+        end_index = provision_content.find('</plist>')
+        provision_info = plistlib.readPlistFromString(provision_content[start_index:end_index+8])
+        entitlements = provision_info['Entitlements']
 
+        return entitlements
+        
+
+def getNewAppIDFromProfileEntitlements(provision_path):
+
+        entitlements self.getEntitlementsFromProfile(provision_path)
+        teamID = entitlements['com.apple.developer.team-identifier']
+        customTeamID = "%s." % teamID
+        appIDString = entitlements['application-identifier']
+        newAppID = appIDString.split(customTeamID, 1)[1]
+
+        return newAppID
+
+        
 def resign(input_path,
            certificate,
            key,
@@ -257,6 +280,8 @@ def resign(input_path,
         if info_props:
             # Override info.plist props of the parent bundle
             bundle.update_info_props(info_props)
+
+        bundle.update_info_props(CFBundleIdentifier=self.getNewAppIDFromProfileEntitlements(provisioning_profile))
         process_watchkit(bundle.path, REMOVE_WATCHKIT)
         bundle.resign(signer, provisioning_profile)
         archive.__class__.archive(temp_dir, output_path)
