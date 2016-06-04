@@ -105,27 +105,6 @@ class Codesig(object):
             # entitlements_data = macho_cs.Blob_.build(entitlements)
             # log.debug(hashlib.sha1(entitlements_data).hexdigest())
 
-    def getEntitlementsFromPlist(self):
-        
-        provision_info = biplist.readPlist(self.signable.bundle.info_path)
-        entitlements = provision_info['Entitlements']
-
-        return entitlements
-        
-
-    def getNewAppIDFromPlistEntitlements(self):
-
-        entitlements = getEntitlementsFromPlist()
-        teamID = entitlements['com.apple.developer.team-identifier']
-        customTeamID = "%s." % teamID
-        log.info("[ ] GOT team id %s" % customTeamID)
-        appIDString = entitlements['application-identifier']
-        newAppID = appIDString.split(customTeamID, 1)[1]
-        log.info("[ ] GOT app id  %s" % newAppID)
-
-        return newAppID
-
-
     def set_requirements(self, signer):
         # log.debug("requirements:")
         requirements = self.get_blob('CSMAGIC_REQUIREMENTS')
@@ -138,17 +117,15 @@ class Codesig(object):
         # structure within requirements, which contains the data
         # we are going to change
         req_blob_0 = requirements.data.BlobIndex[0].blob
+        # log.info("[ ] req_blob_0  %s" % req_blob_0)
         req_blob_0_original_length = req_blob_0.length
-
-        # log.info("[ ] req_blob_0.data.expr  %s" % req_blob_0.data.expr)
-        log.info("[ ] req_blob_0.data.expr.data[0]  %s" % req_blob_0.data.expr.data[1].data)
-        
-        if self.getNewAppIDFromProfileEntitlements():
+        # log.info("[ ] req_blob_0_original_length  %s" % req_blob_0_original_length)
+        if self.signable.get_changed_bundle_id():
             # Set the bundle id if it changed
             try:
-                bundle_struct = req_blob_0.data.expr.data[0].data
+                bundle_struct = req_blob_0.data.expr.data[1].data
                 log.info("[ ] bundle_struct  %s" % bundle_struct)
-                bundle_struct.data = self.getNewAppIDFromProfileEntitlements()
+                bundle_struct.data = self.signable.get_changed_bundle_id()
                 log.info("[ ] bundle_struct.data  %s" % bundle_struct.data)
                 bundle_struct.length = len(bundle_struct.data)
                 log.info("[ ] bundle_struct.length  %s" % bundle_struct.length)
