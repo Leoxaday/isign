@@ -222,6 +222,9 @@ class Codesig(object):
         # signer._log_parsed_asn1(sigwrapper.data.data.value)
         # open("sigrip.der", "wb").write(sigwrapper.data.data.value)
         cd_data = self.get_blob_data('CSMAGIC_CODEDIRECTORY')
+
+        log.info("[ ] cd_data  %s" % cd_data)
+
         sig = signer.sign(cd_data)
         # log.debug("sig len: {0}".format(len(sig)))
         # log.debug("old sig len: {0}".format(len(oldsig)))
