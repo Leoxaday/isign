@@ -239,7 +239,9 @@ class Codesig(object):
         offset = self.construct.data.BlobIndex[0].offset
         log.info("[ ] offset  %s" % offset)
         for blob in self.construct.data.BlobIndex:
-            log.info("[ ] blob.blob.magic  %s" % blob.blob)
+            if blob.blob.magic == 'CSMAGIC_BLOBWRAPPER':
+                log.info("[ ] blob.blob.magic  %s" % blob.blob.magic.data.ident)
+
             blob.offset = offset
             # log.info("[ ] blob  %s" % blob)
             offset += len(macho_cs.Blob.build(blob.blob))
@@ -247,7 +249,7 @@ class Codesig(object):
         superblob = macho_cs.SuperBlob.build(self.construct.data)
 
         self.construct.length = len(superblob) + 8
-        # self.construct.bytes = superblob
+        self.construct.bytes = superblob
 
     def resign(self, bundle, signer):
         """ Do the actual signing. Create the structre and then update all the
