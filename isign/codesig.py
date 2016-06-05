@@ -241,7 +241,7 @@ class Codesig(object):
         for blob in self.construct.data.BlobIndex:
             if blob.blob.magic == 'CSMAGIC_CODEDIRECTORY':
                 cd = self.get_codedirectory()
-                log.info("[ ] cd_data.ident  %s" % cd.data.hashes)
+                log.info("[ ] cd_data.ident  %s" % cd.data.bytes)
 
             blob.offset = offset
             # log.info("[ ] blob  %s" % blob)
