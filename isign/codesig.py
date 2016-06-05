@@ -237,11 +237,14 @@ class Codesig(object):
     def update_offsets(self):
         # update section offsets, to account for any length changes
         offset = self.construct.data.BlobIndex[0].offset
+        log.info("[ ] offset  %s" % offset)
         for blob in self.construct.data.BlobIndex:
             blob.offset = offset
+            log.info("[ ] blob  %s" % blob)
             offset += len(macho_cs.Blob.build(blob.blob))
 
         superblob = macho_cs.SuperBlob.build(self.construct.data)
+        log.info("[ ] superblob  %s" % superblob)
         self.construct.length = len(superblob) + 8
         self.construct.bytes = superblob
 
@@ -282,12 +285,12 @@ class Codesig(object):
         # visitor pattern?
         if hasattr(bundle, 'entitlements_path'):
             self.set_entitlements(bundle.entitlements_path)
-            
+
         self.set_requirements(signer)
         # See docs/codedirectory.rst for some notes on optional hashes
         self.set_codedirectory(bundle.seal_path, bundle.info_path, signer)
         self.set_signature(signer)
-        # self.update_offsets()
+        self.update_offsets()
         
     # TODO make this optional, in case we want to check hashes or something
     # log.debug(hashes)
