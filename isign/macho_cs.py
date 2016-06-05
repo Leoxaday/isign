@@ -43,8 +43,9 @@ CodeDirectory = Struct("CodeDirectory",
                        Pointer(lambda ctx: ctx['cd_start'] - 8 + ctx['identOffset'], CString('')),
                        If(lambda ctx: ctx['version'] >= 0x20100, UBInt32("scatterOffset")),
                        If(lambda ctx: ctx['version'] >= 0x20200, UBInt32("teamIDOffset")),
-                       If(lambda ctx: ctx['version'] >= 0x20200, Pointer(lambda ctx: ctx['cd_start'] - 8 + ctx['teamIDOffset'], CString('teamID'))),
+                       If(lambda ctx: ctx['version'] >= 0x20200, Pointer(lambda ctx: ctx['cd_start'] - 8 + ctx['teamIDOffset'], CString(''))),
                        Pointer(lambda ctx: ctx['cd_start'] - 8 + ctx['identOffset'], CString('ident')),
+                       If(lambda ctx: ctx['version'] >= 0x20200, Pointer(lambda ctx: ctx['cd_start'] - 8 + ctx['teamIDOffset'], CString(''))),
                        Pointer(lambda ctx: ctx['cd_start'] - 8 + ctx['hashOffset'] - ctx['hashSize'] * ctx['nSpecialSlots'], Hashes)
                        )
 
