@@ -239,7 +239,7 @@ class Codesig(object):
         offset = self.construct.data.BlobIndex[0].offset
         log.info("[ ] offset  %s" % offset)
         for blob in self.construct.data.BlobIndex:
-            log.info("[ ] blob.blob.magic  %s" % blob.blob.magic)
+            log.info("[ ] blob.blob.magic  %s" % blob.blob)
             blob.offset = offset
             # log.info("[ ] blob  %s" % blob)
             offset += len(macho_cs.Blob.build(blob.blob))

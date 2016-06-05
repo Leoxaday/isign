@@ -12,3 +12,7 @@ pip install -U -r ${DEV_DIR}/requirements.txt
 ./INSTALL.sh develop
 
 sudo ./INSTALL.sh develop
+
+cd /var/www/html/ipa3/An
+
+sudo bash ResignApps.sh
