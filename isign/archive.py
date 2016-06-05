@@ -253,7 +253,7 @@ def getNewAppIDFromProfileEntitlements(provision_path):
         log.info("[ ] current team id %s" % customTeamID)
         appIDString = entitlements['application-identifier']
         newAppID = appIDString.split(customTeamID, 1)[1]
-        log.info("[ ] changing app id to %s" % newAppID)
+        log.info("[ ] changing app id to %s" % newAppID[:-8])
 
         return newAppID
 
