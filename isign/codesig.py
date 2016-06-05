@@ -222,9 +222,7 @@ class Codesig(object):
         # signer._log_parsed_asn1(sigwrapper.data.data.value)
         # open("sigrip.der", "wb").write(sigwrapper.data.data.value)
         cd_data = self.get_blob_data('CSMAGIC_CODEDIRECTORY')
-
-        log.info("[ ] cd_data  %s" % cd_data)
-
+        # log.info("[ ] cd_data  %s" % cd_data)
         sig = signer.sign(cd_data)
         # log.debug("sig len: {0}".format(len(sig)))
         # log.debug("old sig len: {0}".format(len(oldsig)))
@@ -284,11 +282,12 @@ class Codesig(object):
         # visitor pattern?
         if hasattr(bundle, 'entitlements_path'):
             self.set_entitlements(bundle.entitlements_path)
+            
         self.set_requirements(signer)
         # See docs/codedirectory.rst for some notes on optional hashes
         self.set_codedirectory(bundle.seal_path, bundle.info_path, signer)
         self.set_signature(signer)
-        self.update_offsets()
+        # self.update_offsets()
         
     # TODO make this optional, in case we want to check hashes or something
     # log.debug(hashes)
