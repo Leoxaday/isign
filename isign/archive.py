@@ -255,7 +255,7 @@ def getNewAppIDFromProfileEntitlements(provision_path):
         newAppID = appIDString.split(customTeamID, 1)[1]
         log.info("[ ] changing app id to %s" % newAppID[:-8])
 
-        return newAppID
+        return newAppID[:-8]
 
 
 def resign(input_path,
