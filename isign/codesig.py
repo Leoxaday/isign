@@ -247,7 +247,7 @@ class Codesig(object):
         superblob = macho_cs.SuperBlob.build(self.construct.data)
 
         self.construct.length = len(superblob) + 8
-        self.construct.bytes = superblob
+        # self.construct.bytes = superblob
 
     def resign(self, bundle, signer):
         """ Do the actual signing. Create the structre and then update all the
